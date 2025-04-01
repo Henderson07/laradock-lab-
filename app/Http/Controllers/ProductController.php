@@ -14,10 +14,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $produtos = Product::latest()->paginate(5);
-
-        return view('produto.index',compact('produtos'))
-            ->with(request()->input('page'));
+        //
     }
 
     /**
@@ -27,7 +24,7 @@ class ProductController extends Controller
      */
     public function create()
     {
-        return view('produto.create');
+        return view('products.create');
     }
 
     /**
@@ -38,37 +35,39 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
+        //validate the input
         $request->validate([
-            'descricao' => 'required',
-            'detail' => 'required',
+            'name' => 'required',
+            'detail' => 'required'
         ]);
 
+        //create a new Product
         Product::create($request->all());
 
-        return redirect()->route('product.index')
-                        ->with('Sucesso','Produto criado com sucesso.');
+        //Redirect the user and send friendly message
+        return redirect()->route('products.index')->with('success', 'Product created sucessfully');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Product  $Produto
+     * @param  \App\Models\Product  $
      * @return \Illuminate\Http\Response
      */
-    public function show(Product $produto)
+    public function show(Product $product)
     {
-        return view('produto.show',compact('produto'));
+        //
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Product  $Produto
+     * @param  \App\Models\Product
      * @return \Illuminate\Http\Response
      */
-    public function edit(Product $produto)
+    public function edit(Product $product)
     {
-        return view('produto.edit',compact('produto'));
+        //
     }
 
     /**
@@ -78,30 +77,19 @@ class ProductController extends Controller
      * @param  \App\Models\Product  $Produto
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Product $produto)
+    public function update(Request $request, Product $product)
     {
-        $request->validate([
-            'descricao' => 'required',
-            'detail' => 'required',
-        ]);
-
-        $produto->update($request->all());
-
-        return redirect()->route('produto.index')
-                        ->with('Sucesso','Produto editado com sucesso');
+        //
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Product  $Produto
+     * @param  \App\Models\Product
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Product $produto)
+    public function destroy(Product $product)
     {
-        $produto->delete();
-
-        return redirect()->route('produto.index')
-                        ->with('Sucesso','Produto deletado com sucesso');
+        //
     }
 }

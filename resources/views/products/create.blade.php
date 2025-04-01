@@ -1,14 +1,14 @@
-
-@extends('produto.layout')
+@extends('products.layout')
 
 @section('content')
+
 <div class="row">
     <div class="col-lg-12 margin-tb">
         <div class="pull-left">
             <h2>Adicionar Produto</h2>
         </div>
         <div class="pull-right">
-            <a class="btn btn-primary" href="{{ route('produto.index') }}"> Voltar</a>
+            <a class="btn btn-primary" href="{{ route('products.index') }}"> Voltar</a>
         </div>
     </div>
 </div>
@@ -24,14 +24,14 @@
     </div>
 @endif
 
-<form action="{{ route('produto.store') }}" method="POST">
+<form action="{{ route('products.store') }}" method="POST">
     @csrf
 
      <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-12">
             <div class="form-group">
                 <strong>Nome:</strong>
-                <input type="text" name="descricao" class="form-control" placeholder="Nome">
+                <input type="text" name="name" class="form-control" placeholder="Nome">
             </div>
         </div>
         <div class="col-xs-12 col-sm-12 col-md-12">
@@ -46,4 +46,5 @@
     </div>
 
 </form>
+
 @endsection
