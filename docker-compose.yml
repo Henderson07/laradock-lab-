@@ -1,0 +1,49 @@
+version: "3.8"
+
+services:
+  webserver:
+    container_name: crud-serve
+    build:
+      context: .
+    restart: always
+    ports:
+      - "3002:80"
+    volumes:
+      - "./laravel-crud:/var/www/html/"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - crud-network
+
+  db:
+    container_name: crud-mysql
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: crud_db
+    ports:
+      - "3309:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - crud-network
+
+  phpmyadmin:
+    container_name: crud-phpmyadmin
+    image: phpmyadmin/phpmyadmin:latest
+    restart: always
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+      PMA_ARBITRARY: 1
+    ports:
+      - "8081:80"
+    networks:
+      - crud-network
+
+volumes:
+  mysql_data:
+
+networks:
+  crud-network:
