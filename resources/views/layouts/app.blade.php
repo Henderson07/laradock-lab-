@@ -3,12 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Laravel CRUD Application</title>
+    <title>Gerenciamento de Pessoas</title>
 
-    <!-- Bootstrap CSS -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
 
-    <!-- Estilos personalizados -->
     <style>
         body {
             background-color: #f8f9fa;
@@ -25,13 +23,11 @@
 <body>
 
     <div class="container">
-        <h1 class="text-center">Laravel CRUD Application</h1>
+        <h1 class="text-center">Gerenciamento de Pessoas</h1>
         <hr>
         @yield('content')
     </div>
 
-    <!-- Bootstrap JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-
 </body>
 </html>
