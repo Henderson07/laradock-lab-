@@ -9,7 +9,7 @@ class Pessoa extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['nome'];
+    protected $fillable = ['nome', 'cpf', 'cnpj'];
 
     public static function boot()
     {

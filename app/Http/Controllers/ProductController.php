@@ -14,11 +14,10 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::latest()->paginate(5);
-
-        return view('products.index', compact('products'))
-            ->with(request()->input('page'));
+        $products = Product::all();
+        return view('products.index', compact('products'));
     }
+
 
     /**
      * Show the form for creating a new resource.
@@ -59,7 +58,7 @@ class ProductController extends Controller
      */
     public function show(Product $product)
     {
-        return view('products.show',compact('product'));
+        return view('products.show', compact('product'));
     }
 
     /**
@@ -70,7 +69,7 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
-        return view('products.edit',compact('product'));
+        return view('products.edit', compact('product'));
     }
 
     /**
@@ -90,7 +89,7 @@ class ProductController extends Controller
         $product->update($request->all());
 
         return redirect()->route('products.index')
-                        ->with('success','Produto editado com sucesso');
+            ->with('success', 'Produto editado com sucesso');
     }
 
     /**
@@ -104,6 +103,6 @@ class ProductController extends Controller
         $product->delete();
 
         return redirect()->route('products.index')
-                        ->with('success','Produto deletado com sucesso');
+            ->with('success', 'Produto deletado com sucesso');
     }
 }

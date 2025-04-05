@@ -1,10 +1,9 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gerenciamento de Pessoas</title>
+    <title>@yield('title', 'Sistema de Gestão')</title> <!-- Valor padrão -->
 
+    <!-- Adicionando CSS do Bootstrap -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
 
     <style>
@@ -20,14 +19,14 @@
         }
     </style>
 </head>
-<body>
 
+<body>
     <div class="container">
-        <h1 class="text-center">Gerenciamento de Pessoas</h1>
+        <h1 class="text-center">@yield('page-title', 'Bem-vindo ao Sistema')</h1> <!-- Valor padrão -->
         <hr>
         @yield('content')
     </div>
 
+    <!-- Adicionando JavaScript do Bootstrap -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
 </body>
-</html>
