@@ -5,11 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Pessoa extends Model
+abstract class Pessoa extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['nome', 'cpf', 'cnpj'];
+    protected $fillable = ['nome']; // Somente 'nome', pois cpf e cnpj serão nas subclasses
 
     public static function boot()
     {
@@ -20,3 +20,4 @@ class Pessoa extends Model
         });
     }
 }
+

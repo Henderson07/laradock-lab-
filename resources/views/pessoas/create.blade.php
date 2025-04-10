@@ -15,20 +15,20 @@
                 <label>Tipo:</label>
                 <select name="tipo" id="tipo" class="form-control" required>
                     <option value="">Selecione</option>
-                    <option value="fisica">Pessoa Física</option>
-                    <option value="juridica">Pessoa Jurídica</option>
+                    <option value="F">Pessoa Física</option>
+                    <option value="J">Pessoa Jurídica</option>
                 </select>
             </div>
-
             <div class="mb-3" id="cpf-field" style="display: none;">
                 <label>CPF:</label>
-                <input type="text" name="cpf" class="form-control">
+                <input type="text" name="cpf_cnpj" class="form-control">
             </div>
 
             <div class="mb-3" id="cnpj-field" style="display: none;">
                 <label>CNPJ:</label>
-                <input type="text" name="cnpj" class="form-control">
+                <input type="text" name="cpf_cnpj" class="form-control">
             </div>
+
             @if ($errors->any())
                 <div class="alert alert-danger">
                     <ul>

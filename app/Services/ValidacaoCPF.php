@@ -8,16 +8,12 @@ class ValidacaoCPF
     {
         $cpf = preg_replace('/[^0-9]/', '', $cpf); // Remove caracteres especiais
 
+        dd($cpf); // Teste para ver se o CPF está correto antes de validar
+
         if (strlen($cpf) !== 11 || preg_match('/(\d)\1{10}/', $cpf)) {
             return false; // CPF inválido (tamanho incorreto ou sequência repetida)
         }
 
-        return $this->calcularDigitosVerificadores($cpf);
-    }
-
-    private function calcularDigitosVerificadores(string $cpf): bool
-    {
-        // Lógica para calcular os dígitos verificadores do CPF
         return true; // Simulação de retorno válido
     }
 }

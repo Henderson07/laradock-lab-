@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Pessoa;
+use App\Models\PessoaFisica;
+use App\Models\PessoaJuridica;
 
 use App\Services\ValidacaoCPF;
 use App\Services\ValidacaoCNPJ;
@@ -19,30 +21,9 @@ class PessoaController extends Controller
     {
         $data = $request->validate([
             'nome' => 'required|string|max:255',
-            'cpf' => 'nullable|string|size:11',
-            'cnpj' => 'nullable|string|size:14',
+            'cpf_cnpj' => 'required|string|min:11|max:14', // O campo está correto?
+            'tipo' => 'required|in:F,J'
         ]);
-
-        // Criando instâncias dos serviços de validação
-        $validadorCPF = new ValidacaoCPF();
-        $validadorCNPJ = new ValidacaoCNPJ();
-
-        // Validar CPF
-        if (!empty($data['cpf']) && !$validadorCPF->validar($data['cpf'])) {
-            return redirect()->back()->withErrors(['cpf' => 'O CPF informado é inválido.']);
-        }
-
-        // Validar CNPJ
-        if (!empty($data['cnpj']) && !$validadorCNPJ->validar($data['cnpj'])) {
-            return redirect()->back()->withErrors(['cnpj' => 'O CNPJ informado é inválido.']);
-        }
-
-        // Garantir que apenas um dos campos seja preenchido
-        if (!empty($data['cpf'])) {
-            $data['cnpj'] = null;
-        } elseif (!empty($data['cnpj'])) {
-            $data['cpf'] = null;
-        }
 
         Pessoa::create($data);
 
@@ -51,14 +32,20 @@ class PessoaController extends Controller
 
     public function index()
     {
-        $pessoas = Pessoa::all(); // Busca todas as pessoas cadastradas
+        $pessoas = PessoaFisica::all()->concat(PessoaJuridica::all()); // Junta as duas listas corretamente
+
         return view('pessoas.index', compact('pessoas'));
     }
 
-    public function edit(Pessoa $pessoa)
+
+
+
+    public function edit($id)
     {
+        $pessoa = PessoaFisica::find($id) ?? PessoaJuridica::find($id);
         return view('pessoas.edit', compact('pessoa'));
     }
+
 
     public function show($id)
     {
@@ -68,10 +55,14 @@ class PessoaController extends Controller
 
     public function destroy($id)
     {
-        $pessoa = Pessoa::findOrFail($id);
-        $pessoa->delete();
+        $pessoa = PessoaFisica::find($id) ?? PessoaJuridica::find($id);
 
-        return redirect()->route('pessoas.index')
-            ->with('success', 'Pessoa deletada com sucesso');
+        if ($pessoa) {
+            $pessoa->delete();
+            return redirect()->route('pessoas.index')->with('success', 'Pessoa deletada com sucesso!');
+        }
+
+        return redirect()->route('pessoas.index')->withErrors(['error' => 'Pessoa não encontrada.']);
     }
+
 }
