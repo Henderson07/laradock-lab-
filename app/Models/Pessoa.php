@@ -1,23 +1,26 @@
 <?php
 
+// app/Models/Pessoa.php
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-abstract class Pessoa extends Model
+class Pessoa extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['nome']; // Somente 'nome', pois cpf e cnpj serão nas subclasses
+    protected $fillable = ['nome'];
 
-    public static function boot()
+    public function pessoaFisica()
     {
-        parent::boot();
+        return $this->hasOne(PessoaFisica::class);
+    }
 
-        static::creating(function ($pessoa) {
-            $pessoa->nome = ucfirst($pessoa->nome); // Capitaliza o nome antes de salvar
-        });
+    public function pessoaJuridica()
+    {
+        return $this->hasOne(PessoaJuridica::class);
     }
 }
+
 

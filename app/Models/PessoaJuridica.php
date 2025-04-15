@@ -1,23 +1,20 @@
 <?php
 
+// app/Models/PessoaJuridica.php
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class PessoaJuridica extends Pessoa
+class PessoaJuridica extends Model
 {
-    protected $fillable = ['cpf_cnpj']; // Apenas CNPJ aqui
-    protected $table = 'pessoas'; // Garante que usa a única tabela
+    protected $table = 'pessoas_juridicas';
 
+    protected $fillable = ['pessoa_id', 'cnpj'];
 
-    public static function boot()
+    public function pessoa()
     {
-        parent::boot();
-
-        static::creating(function ($pessoa) {
-            $pessoa->tipo = 'J'; // Define que é pessoa jurídica
-        });
+        return $this->belongsTo(Pessoa::class);
     }
 }
 

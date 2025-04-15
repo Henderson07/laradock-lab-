@@ -1,68 +1,64 @@
 <?php
 
+// app/Http/Controllers/PessoaController.php
 namespace App\Http\Controllers;
-
-use Illuminate\Http\Request;
-use App\Models\Pessoa;
-use App\Models\PessoaFisica;
-use App\Models\PessoaJuridica;
 
 use App\Services\ValidacaoCPF;
 use App\Services\ValidacaoCNPJ;
 
+use App\Models\Pessoa;
+use Illuminate\Http\Request;
+use App\Services\PessoaService;
+
 class PessoaController extends Controller
 {
+    protected $cadastroService;
+
+    public function __construct(PessoaService $pessoaService)
+    {
+        $this->pessoaService = $pessoaService;
+    }
+
+    public function store(Request $request)
+    {
+        $this->pessoaService->cadastrar($request->all());
+
+        $validacaoCPF = new ValidacaoCPF();
+        $validacaoCNPJ = new ValidacaoCNPJ();
+
+        if ($request->tipo === 'F' && !$validacaoCPF->validar($request->cpf)) {
+            return redirect()->back()->with('error', 'CPF inválido');
+        }
+
+        if ($request->tipo === 'J' && !$validacaoCNPJ->validar($request->cnpj)) {
+            return redirect()->back()->with('error', 'CNPJ inválido');
+        }
+
+        return redirect()
+            ->route('pessoas.index')
+            ->with('success', 'Pessoa cadastrada com sucesso!');
+    }
+
+    public function index()
+    {
+        $pessoas = Pessoa::with(['pessoaFisica', 'pessoaJuridica'])->get();
+        return view('pessoas.index', compact('pessoas'));
+    }
+
     public function create()
     {
         return view('pessoas.create');
     }
 
-    public function store(Request $request)
-    {
-        $data = $request->validate([
-            'nome' => 'required|string|max:255',
-            'cpf_cnpj' => 'required|string|min:11|max:14', // O campo está correto?
-            'tipo' => 'required|in:F,J'
-        ]);
-
-        Pessoa::create($data);
-
-        return redirect()->route('pessoas.index')->with('success', 'Pessoa cadastrada com sucesso!');
-    }
-
-    public function index()
-    {
-        $pessoas = PessoaFisica::all()->concat(PessoaJuridica::all()); // Junta as duas listas corretamente
-
-        return view('pessoas.index', compact('pessoas'));
-    }
-
-
-
-
-    public function edit($id)
-    {
-        $pessoa = PessoaFisica::find($id) ?? PessoaJuridica::find($id);
-        return view('pessoas.edit', compact('pessoa'));
-    }
-
-
-    public function show($id)
-    {
-        $pessoa = Pessoa::findOrFail($id);
-        return response()->json($pessoa);
-    }
-
     public function destroy($id)
     {
-        $pessoa = PessoaFisica::find($id) ?? PessoaJuridica::find($id);
+        $pessoa = Pessoa::with(['pessoaFisica', 'pessoaJuridica'])->findOrFail($id);
 
-        if ($pessoa) {
-            $pessoa->delete();
-            return redirect()->route('pessoas.index')->with('success', 'Pessoa deletada com sucesso!');
-        }
+        $pessoa->pessoaFisica?->delete();
+        $pessoa->pessoaJuridica?->delete();
+        $pessoa->delete();
 
-        return redirect()->route('pessoas.index')->withErrors(['error' => 'Pessoa não encontrada.']);
+        return redirect()->route('pessoas.index')->with('success', 'Pessoa deletada com sucesso!');
     }
-
 }
+

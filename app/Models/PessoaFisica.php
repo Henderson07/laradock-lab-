@@ -1,24 +1,20 @@
 <?php
 
+// app/Models/PessoaFisica.php
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-namespace App\Models;
-
-class PessoaFisica extends Pessoa
+class PessoaFisica extends Model
 {
-    protected $fillable = ['cpf_cnpj']; // Apenas CPF aqui
-    protected $table = 'pessoas'; // Garante que usa a única tabela
+    protected $table = 'pessoas_fisicas'; // <- define o nome real da tabela
 
-    public static function boot()
+    protected $fillable = ['pessoa_id', 'cpf'];
+
+    public function pessoa()
     {
-        parent::boot();
-
-        static::creating(function ($pessoa) {
-            $pessoa->tipo = 'F'; // Define que é pessoa física
-        });
+        return $this->belongsTo(Pessoa::class);
     }
 }
 

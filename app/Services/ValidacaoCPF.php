@@ -6,14 +6,38 @@ class ValidacaoCPF
 {
     public function validar(string $cpf): bool
     {
-        $cpf = preg_replace('/[^0-9]/', '', $cpf); // Remove caracteres especiais
+        // Remove caracteres especiais
+        $cpf = preg_replace('/[^0-9]/', '', $cpf);
 
-        dd($cpf); // Teste para ver se o CPF está correto antes de validar
-
+        // Verifica se o CPF tem 11 dígitos e não é uma sequência de números repetidos
         if (strlen($cpf) !== 11 || preg_match('/(\d)\1{10}/', $cpf)) {
-            return false; // CPF inválido (tamanho incorreto ou sequência repetida)
+            return false;
         }
 
-        return true; // Simulação de retorno válido
+        // Cálculo dos dígitos verificadores
+        return $this->calcularDigitosVerificadores($cpf);
+    }
+
+    private function calcularDigitosVerificadores(string $cpf): bool
+    {
+        // Cálculo do primeiro dígito verificador
+        $soma = 0;
+        for ($i = 0; $i < 9; $i++) {
+            $soma += $cpf[$i] * (10 - $i);
+        }
+        $resto = $soma % 11;
+        $digito1 = $resto < 2 ? 0 : 11 - $resto;
+
+        // Cálculo do segundo dígito verificador
+        $soma = 0;
+        for ($i = 0; $i < 10; $i++) {
+            $soma += $cpf[$i] * (11 - $i);
+        }
+        $resto = $soma % 11;
+        $digito2 = $resto < 2 ? 0 : 11 - $resto;
+
+        // Verifica se os dígitos calculados correspondem aos fornecidos
+        return $cpf[9] == $digito1 && $cpf[10] == $digito2;
     }
 }
+
