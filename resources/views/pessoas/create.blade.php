@@ -4,6 +4,13 @@
 @section('page-title', 'Nova Pessoa')
 
 @section('content')
+
+@if (session('error'))
+    <div class="alert alert-danger">
+        {{ session('error') }}
+    </div>
+@endif
+
 <div class="container">
     <form action="{{ route('pessoas.store') }}" method="POST">
         @csrf

@@ -1,6 +1,5 @@
 <?php
 
-// app/Services/CadastroPessoaService.php
 namespace App\Services;
 
 use App\Models\Pessoa;
@@ -11,12 +10,20 @@ class PessoaService
 {
     public function cadastrar(array $data)
     {
-        // Verificar se o CPF já existe
-        if ($data['tipo'] === 'F' && PessoaFisica::where('cpf', $data['cpf'])->exists()) {
-            return redirect()->back()->with('error', 'CPF já cadastrado');
+        // Verifica duplicidade
+        if ($data['tipo'] === 'F') {
+            if (PessoaFisica::where('cpf', $data['cpf'])->exists()) {
+                return ['success' => false, 'message' => 'CPF já cadastrado'];
+            }
         }
 
-        // Criar pessoa
+        if ($data['tipo'] === 'J') {
+            if (PessoaJuridica::where('cnpj', $data['cnpj'])->exists()) {
+                return ['success' => false, 'message' => 'CNPJ já cadastrado'];
+            }
+        }
+
+        // Cria pessoa e associa tipo
         $pessoa = Pessoa::create(['nome' => $data['nome']]);
 
         if ($data['tipo'] === 'F') {
@@ -31,7 +38,7 @@ class PessoaService
             ]);
         }
 
-        return $pessoa;
+        return ['success' => true, 'pessoa' => $pessoa];
     }
 }
 

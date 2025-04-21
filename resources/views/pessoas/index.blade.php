@@ -9,6 +9,12 @@
         {{ session('success') }}
     </div>
 @endif
+
+@if (session('error'))
+    <div class="alert alert-danger mt-3">
+        {{ session('error') }}
+    </div>
+@endif
 <div class="container">
     <a href="{{ route('pessoas.create') }}" class="btn btn-primary">Cadastrar Pessoa</a>
 

@@ -1,18 +1,18 @@
 <?php
 
-// app/Http/Controllers/PessoaController.php
 namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+
+use App\Models\Pessoa;
+use App\Services\PessoaService;
 
 use App\Services\ValidacaoCPF;
 use App\Services\ValidacaoCNPJ;
 
-use App\Models\Pessoa;
-use Illuminate\Http\Request;
-use App\Services\PessoaService;
-
 class PessoaController extends Controller
 {
-    protected $cadastroService;
+    protected $pessoaService;
 
     public function __construct(PessoaService $pessoaService)
     {
@@ -21,8 +21,6 @@ class PessoaController extends Controller
 
     public function store(Request $request)
     {
-        $this->pessoaService->cadastrar($request->all());
-
         $validacaoCPF = new ValidacaoCPF();
         $validacaoCNPJ = new ValidacaoCNPJ();
 
@@ -34,9 +32,13 @@ class PessoaController extends Controller
             return redirect()->back()->with('error', 'CNPJ inválido');
         }
 
-        return redirect()
-            ->route('pessoas.index')
-            ->with('success', 'Pessoa cadastrada com sucesso!');
+        $resultado = $this->pessoaService->cadastrar($request->all());
+
+        if (!$resultado['success']) {
+            return redirect()->back()->with('error', $resultado['message']);
+        }
+
+        return redirect()->route('pessoas.index')->with('success', 'Pessoa cadastrada com sucesso!');
     }
 
     public function index()

@@ -16,9 +16,6 @@ class UserController extends Controller
 
         return redirect()->route('users.index')->with('success', 'Usuário cadastrado com sucesso!');
     }
-
-
-
     /**
      * Display a listing of the resource.
      *
